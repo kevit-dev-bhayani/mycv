@@ -15,7 +15,9 @@ import { UsersService } from './users.service';
 import { serialize } from 'src/interceptors/serialize.interceptor';
 import { UserDto } from './dtos/user.dto';
 import { AuthService } from './auth.service';
-
+import { CurrentUser } from './decorators/current-user.decorator';
+import { AuthGuard } from 'src/guards/auth.guard';
+import { UseGuards } from '@nestjs/common';
 @Controller('users')
 @serialize(UserDto)
 export class UsersController {
@@ -23,14 +25,44 @@ export class UsersController {
     private userService: UsersService,
     private authService: AuthService,
   ) {}
+
+  @Get('/colors/:color')
+  setColor(@Param('color') color: string, @Session() session: any) {
+    session.color = color;
+  }
+
+  @Get('/colors')
+  getColor(@Session() session: any) {
+    return session.color;
+  }
+
+  // @Get('/whoami')
+  // WhoAmI(@Session() session: any) {
+  //   return this.userService.findOne(session.userId);
+  // }
+
+  @Get('/whoami')
+  @UseGuards(AuthGuard)
+  whoAmI(@CurrentUser() user: string) {
+    return user;
+  }
   @Post('/signup')
-  createUser(@Body() body: CreateUserDto) {
-    return this.authService.signUp(body.email, body.password);
+  async createUser(@Body() body: CreateUserDto, @Session() session: any) {
+    const user = await this.authService.signUp(body.email, body.password);
+    session.userId = user.id;
+    return user;
   }
 
   @Post('/signin')
-  signInUser(@Body() body: CreateUserDto) {
-    return this.authService.signIn(body.email, body.password);
+  async signInUser(@Body() body: CreateUserDto, @Session() session: any) {
+    const user = await this.authService.signIn(body.email, body.password);
+    session.userId = user.id;
+    return user;
+  }
+
+  @Post('/signout')
+  signOut(@Session() session: any) {
+    session.userId = null;
   }
 
   @Get('/:id')

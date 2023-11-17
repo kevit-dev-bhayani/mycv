@@ -6,7 +6,7 @@ POST http://localhost:3000/users/signup
 content-type : application/json
 
 {
-    "email" : "dev@gmail.com",
+    "email" : "rishit@gmail.com",
     "password" : "123"
 }
 
@@ -18,6 +18,9 @@ content-type : application/json
     "email" : "dev@gmail.com",
     "password" : "123"
 }
+
+### signout user
+POST HTTP://localhost:3000/users/signout
 
 ### get user by id
 GET http://localhost:3000/users/3
@@ -35,3 +38,12 @@ content-type : application/json
 {
     "password": "123"
 }
+
+###set color
+GET http://localhost:3000/users/colors/red
+
+###get color
+GET http://localhost:3000/users/colors
+
+### get self
+GET http://localhost:3000/users/whoami
