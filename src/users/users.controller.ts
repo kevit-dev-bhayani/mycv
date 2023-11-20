@@ -12,14 +12,14 @@ import {
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { UsersService } from './users.service';
-import { serialize } from 'src/interceptors/serialize.interceptor';
+import { Serialize } from '../interceptors/serialize.interceptor';
 import { UserDto } from './dtos/user.dto';
 import { AuthService } from './auth.service';
 import { CurrentUser } from './decorators/current-user.decorator';
-import { AuthGuard } from 'src/guards/auth.guard';
+import { AuthGuard } from '../guards/auth.guard';
 import { UseGuards } from '@nestjs/common';
 @Controller('users')
-@serialize(UserDto)
+@Serialize(UserDto)
 export class UsersController {
   constructor(
     private userService: UsersService,
@@ -46,6 +46,7 @@ export class UsersController {
   whoAmI(@CurrentUser() user: string) {
     return user;
   }
+
   @Post('/signup')
   async createUser(@Body() body: CreateUserDto, @Session() session: any) {
     const user = await this.authService.signUp(body.email, body.password);

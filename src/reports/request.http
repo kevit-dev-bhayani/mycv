@@ -1,0 +1,26 @@
+### creating new reports
+POST http://localhost:3000/reports/new
+content-type: application/json
+
+{
+    "model": "d",
+    "make": "abc",
+    "year": 2020,
+    "price": 300,
+    "lng": 20.3039,
+    "lat" : 76.8022,
+    "mileage": 1000
+}
+
+### approve report 
+PATCH http://localhost:3000/reports/5
+content-type: application/json
+
+{
+    "approved": true
+}
+
+
+### get estimate
+
+GET http://localhost:3000/reports?make=abc&model=a&year=2020&lat=75.5&lng=20.5&mileage=100
